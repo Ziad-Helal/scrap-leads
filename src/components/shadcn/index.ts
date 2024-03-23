@@ -3,3 +3,7 @@ export * from "./label";
 export * from "./button";
 export * from "./theme-provider";
 export * from "./dropdown-menu";
+export * from "./command";
+export * from "./dialog";
+export * from "./popover";
+export * from "./skeleton";

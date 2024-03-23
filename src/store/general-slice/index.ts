@@ -1,3 +1,4 @@
+import { countries } from "@/assets/countries";
 import { GType_OR_GLocation } from "@/types/store/leads";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
@@ -21,6 +22,7 @@ export interface GeneralState {
     allPlaces: boolean;
     subscriptionInfo: boolean;
   };
+  countries: { iso2: string; text: string }[];
   admin1?: GType_OR_GLocation[];
   admin2?: GType_OR_GLocation[];
   city?: GType_OR_GLocation[];
@@ -36,6 +38,10 @@ const initialState: GeneralState = {
     allPlaces: false,
     subscriptionInfo: false,
   },
+  countries: Object.keys(countries).map((countryIso) => ({
+    iso2: countryIso,
+    text: countries[countryIso],
+  })),
 };
 
 export const generalSlice = createSlice({
