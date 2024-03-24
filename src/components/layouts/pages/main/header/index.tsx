@@ -1,5 +1,8 @@
 import { Content_Container } from "@/components/layouts/wrapers";
-import { SubscriptionInfo_Modal } from "@/components/modals";
+import {
+  AdvancedFilters_Modal,
+  SubscriptionInfo_Modal,
+} from "@/components/modals";
 import { ColorTheme_Toggler } from "@/components/togglers";
 import { Link } from "react-router-dom";
 
@@ -13,6 +16,7 @@ export const Page_MainLayout_Header = () => {
           </Link>
           <div className="flex items-center justify-center gap-2">
             <ColorTheme_Toggler />
+            <AdvancedFilters_Modal />
             <SubscriptionInfo_Modal />
           </div>
         </div>

@@ -1,31 +1,29 @@
+import { AdvancedFilters_Form } from "@/components/forms";
 import {
   Button,
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/shadcn";
+import { SlidersHorizontal } from "lucide-react";
 
 export function AdvancedFilters_Modal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="outline" size="icon" className="rounded-full p-2">
+          <SlidersHorizontal />
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] lg:max-w-[850px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle className="text-4xl font-semibold">
+            Search Filters
+          </DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4"></div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        <AdvancedFilters_Form />
       </DialogContent>
     </Dialog>
   );
