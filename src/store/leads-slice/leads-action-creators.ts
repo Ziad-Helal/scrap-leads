@@ -8,6 +8,7 @@ import {
   setSubscriptionInfo,
 } from "@/store/leads-slice";
 import { SearchPlaces_Params } from "@/types/store/leads";
+import { toast } from "sonner";
 
 const api = new scrap_io();
 
@@ -68,9 +69,32 @@ export function getOnePlace(place_id: string, skip_data?: 0 | 1) {
       .then(({ data }) => data)
       .catch((error) => alert(error));
 
-    // CHECK DATA STATUS
-    dispatch(setOnePlace(response.data));
-    dispatch(loaded("onePlace"));
+    switch (response.meta.status) {
+      case "completed":
+        dispatch(setOnePlace(response.data));
+        dispatch(loaded("onePlace"));
+        break;
+      case "updating":
+        setTimeout(() => {
+          dispatch(getOnePlace(place_id, skip_data));
+        }, 5000);
+        break;
+      case "incomplete":
+        dispatch(setOnePlace(response.data));
+        dispatch(loaded("onePlace"));
+        toast("The result is incomplete", {
+          description:
+            "The maximum unmber of exports for this month has been reached.",
+          classNames: {
+            title: "text-red-500",
+            toast: "group-[.toaster]:pointer-events-auto",
+          },
+        });
+        break;
+      default:
+        dispatch(loaded("onePlace"));
+        break;
+    }
   };
 }
 
@@ -83,8 +107,31 @@ export function getAllPlaces(params: SearchPlaces_Params) {
       .then(({ data }) => data)
       .catch((error) => error);
 
-    // CHECK DATA STATUS
-    dispatch(setAllPlaces(response.data));
-    dispatch(loaded("allPlaces"));
+    switch (response.meta.status) {
+      case "completed":
+        dispatch(setAllPlaces(response.data));
+        dispatch(loaded("allPlaces"));
+        break;
+      case "updating":
+        setTimeout(() => {
+          dispatch(getAllPlaces(params));
+        }, 5000);
+        break;
+      case "incomplete":
+        dispatch(setAllPlaces(response.data));
+        dispatch(loaded("allPlaces"));
+        toast("The result is incomplete", {
+          description:
+            "The maximum unmber of exports for this month has been reached.",
+          classNames: {
+            title: "text-red-500",
+            toast: "group-[.toaster]:pointer-events-auto",
+          },
+        });
+        break;
+      default:
+        dispatch(loaded("allPlaces"));
+        break;
+    }
   };
 }

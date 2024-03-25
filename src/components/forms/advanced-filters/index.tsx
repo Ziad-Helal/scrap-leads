@@ -14,72 +14,86 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/shadcn";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { setSearchFilters } from "@/store/leads-slice";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
-  is_main_type: z.enum(["all", "1", "0"]),
-  is_closed: z.enum(["all", "1", "0"]),
-  has_website: z.enum(["all", "1", "0"]),
-  has_phone: z.enum(["all", "1", "0"]),
-  has_email: z.enum(["all", "1", "0"]),
-  has_facebook: z.enum(["all", "1", "0"]),
-  has_instagram: z.enum(["all", "1", "0"]),
-  has_youtube: z.enum(["all", "1", "0"]),
-  has_twitter: z.enum(["all", "1", "0"]),
-  has_linkedin: z.enum(["all", "1", "0"]),
-  is_claimed: z.enum(["all", "1", "0"]),
-  price_range: z.enum(["all", "$", "$$", "$$$", "$$$$"]),
+  is_main_type: z.enum(["all", "1", "0"]).optional(),
+  is_closed: z.enum(["all", "1", "0"]).optional(),
+  has_website: z.enum(["all", "1", "0"]).optional(),
+  has_phone: z.enum(["all", "1", "0"]).optional(),
+  has_email: z.enum(["all", "1", "0"]).optional(),
+  has_facebook: z.enum(["all", "1", "0"]).optional(),
+  has_instagram: z.enum(["all", "1", "0"]).optional(),
+  has_youtube: z.enum(["all", "1", "0"]).optional(),
+  has_twitter: z.enum(["all", "1", "0"]).optional(),
+  has_linkedin: z.enum(["all", "1", "0"]).optional(),
+  is_claimed: z.enum(["all", "1", "0"]).optional(),
+  price_range: z.enum(["all", "$", "$$", "$$$", "$$$$"]).optional(),
   reviews_rating_lte: z
-    .number({ invalid_type_error: "A number is expected!" })
-    .min(0)
-    .max(5),
+    .union([
+      z.undefined(),
+      z.string().regex(/^[0-5]$/, "0 ~ 5"),
+      z.string().trim().length(0),
+    ])
+    .optional(),
   reviews_rating_gte: z
-    .number({ invalid_type_error: "A number is expected!" })
-    .min(0)
-    .max(5),
+    .union([
+      z.undefined(),
+      z.string().regex(/^[0-5]$/, "0 ~ 5"),
+      z.string().trim().length(0),
+    ])
+    .optional(),
   reviews_count_lte: z
-    .number({ invalid_type_error: "A number is expected!" })
-    .min(0),
+    .union([
+      z.undefined(),
+      z.string().regex(/^(?:0|[1-9]\d{0,3})$/, "0 ~ 9999"),
+      z.string().trim().length(0),
+    ])
+    .optional(),
   reviews_count_gte: z
-    .number({ invalid_type_error: "A number is expected!" })
-    .min(0),
+    .union([
+      z.undefined(),
+      z.string().regex(/^(?:0|[1-9]\d{0,3})$/, "0 ~ 9999"),
+      z.string().trim().length(0),
+    ])
+    .optional(),
   gmap_photos_count_lte: z
-    .number({ invalid_type_error: "A number is expected!" })
-    .min(0),
+    .union([
+      z.undefined(),
+      z.string().regex(/^(?:0|[1-9]\d{0,3})$/, "0 ~ 9999"),
+      z.string().trim().length(0),
+    ])
+    .optional(),
   gmap_photos_count_gte: z
-    .number({ invalid_type_error: "A number is expected!" })
-    .min(0),
-  has_contact_pages: z.enum(["all", "1", "0"]),
-  has_ad_pixels: z.enum(["all", "1", "0"]),
+    .union([
+      z.undefined(),
+      z.string().regex(/^(?:0|[1-9]\d{0,3})$/, "0 ~ 9999"),
+      z.string().trim().length(0),
+    ])
+    .optional(),
+  has_contact_pages: z.enum(["all", "1", "0"]).optional(),
+  has_ad_pixels: z.enum(["all", "1", "0"]).optional(),
 });
 
 export function AdvancedFilters_Form() {
+  const dispatch = useAppDispatch();
+  const searchFilters = useAppSelector((state) => state.leads.searchFilters);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      is_main_type: "all",
-      is_closed: "all",
-      has_website: "all",
-      has_phone: "all",
-      has_email: "all",
-      has_facebook: "all",
-      has_instagram: "all",
-      has_youtube: "all",
-      has_twitter: "all",
-      has_linkedin: "all",
-      is_claimed: "all",
-      price_range: undefined,
-      reviews_rating_lte: undefined,
-      reviews_rating_gte: undefined,
-      reviews_count_lte: undefined,
-      reviews_count_gte: undefined,
-      gmap_photos_count_lte: undefined,
-      gmap_photos_count_gte: undefined,
-      has_contact_pages: "all",
-      has_ad_pixels: "all",
-    },
+    defaultValues: searchFilters,
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {}
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    dispatch(setSearchFilters(data));
+    toast("Filters Updated Successfully.", {
+      classNames: {
+        title: "text-green-500",
+        toast: "group-[.toaster]:pointer-events-auto",
+      },
+    });
+  }
 
   return (
     <Form {...form}>
@@ -517,7 +531,7 @@ export function AdvancedFilters_Form() {
               <div className="flex gap-2">
                 <FormField
                   control={form.control}
-                  name="reviews_count_gte"
+                  name="reviews_count_lte"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>

@@ -368,3 +368,26 @@ export interface SearchPlaces_Params {
   gmap_photos_count_gt?: string | number;
   gmap_price_range?: "$" | "$$" | "$$$" | "$$$$";
 }
+
+export interface SearchFilters {
+  is_main_type?: "0" | "1" | "all";
+  is_closed?: "0" | "1" | "all";
+  has_website?: "0" | "1" | "all";
+  has_phone?: "0" | "1" | "all";
+  has_email?: "0" | "1" | "all";
+  has_facebook?: "0" | "1" | "all";
+  has_instagram?: "0" | "1" | "all";
+  has_youtube?: "0" | "1" | "all";
+  has_twitter?: "0" | "1" | "all";
+  has_linkedin?: "0" | "1" | "all";
+  is_claimed?: "0" | "1" | "all";
+  price_range?: "all" | "$" | "$$" | "$$$" | "$$$$";
+  reviews_rating_lte?: string | undefined;
+  reviews_rating_gte?: string | undefined;
+  reviews_count_lte?: string | undefined;
+  reviews_count_gte?: string | undefined;
+  gmap_photos_count_lte?: string | undefined;
+  gmap_photos_count_gte?: string | undefined;
+  has_contact_pages?: "0" | "1" | "all";
+  has_ad_pixels?: "0" | "1" | "all";
+}

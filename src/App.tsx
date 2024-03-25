@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Page_MainLayout } from "@/components/layouts/pages";
 import { Home_Page, NotFound_Page } from "@/pages";
-import { ThemeProvider } from "@/components/shadcn";
+import { ThemeProvider, Toaster } from "@/components/shadcn";
 
 export default function App() {
   const routes = createBrowserRouter([
@@ -18,6 +18,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <RouterProvider router={routes} />
+      <Toaster />
     </ThemeProvider>
   );
 }
