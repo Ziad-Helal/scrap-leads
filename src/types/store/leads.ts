@@ -77,19 +77,19 @@ export interface OnePlace {
   location_borough: string;
   location_street_1: string;
   location_street_2: string;
-  location_city: string | null;
-  location_postal_code: string | null;
+  location_city: string;
+  location_postal_code: string;
   location_state: string;
   location_latitude: string;
   location_longitude: string;
   location_country_code: string;
   location_admin1_code: string;
-  location_admin2_code: string | null;
+  location_admin2_code: string;
   link: string;
   place_id: string;
   owner_name: string;
   owner_id: string;
-  price_range: string | null;
+  price_range: string;
   reviews_id: string;
   reviews_count: number;
   reviews_rating: number;
@@ -101,7 +101,7 @@ export interface OnePlace {
     "5": number;
   };
   photos_count: string;
-  photos: any;
+  photos: string[];
   characteristics: any;
   occupancy: {
     monday: {
@@ -304,22 +304,22 @@ export interface OnePlace {
     url: string;
     domain: string;
     is_responding: boolean;
-    is_empty: string | null;
+    is_empty: string;
     title: string;
-    meta_keywords: any | null;
+    meta_keywords: any;
     meta_description: string;
     meta_og_title: string;
-    meta_og_image: null;
-    meta_generator: null;
+    meta_og_image: string;
+    meta_generator: string;
     lang: string;
     contact_pages: string[];
-    facebook: string[] | null;
-    youtube: string[] | null;
-    twitter: string[] | null;
-    instagram: string[] | null;
-    linkedin: string[] | null;
-    technologies: string[] | null;
-    ad_pixels: string[] | null;
+    facebook: string[];
+    youtube: string[];
+    twitter: string[];
+    instagram: string[];
+    linkedin: string[];
+    technologies: string[];
+    ad_pixels: string[];
     emails: { email: string; sources: string[] }[];
     phones: { phone: string; sources: string[] }[];
     status: string;
@@ -390,4 +390,89 @@ export interface SearchFilters {
   gmap_photos_count_gte?: string | undefined;
   has_contact_pages?: "0" | "1" | "all";
   has_ad_pixels?: "0" | "1" | "all";
+}
+
+export interface ExportFields {
+  name:
+    | "Essential Fields In Exports"
+    | "GMap Additional Fields In Exports"
+    | "Website Additional Fields In Exports";
+  fields: string[];
+}
+
+export interface ReadyToConvertFields {
+  "Google Place ID": string;
+  "Place Name": string;
+  "Description 1": string;
+  "Description 2": string;
+  "Description 3": string;
+  "Place is Closed": string;
+  "Main Type": string;
+  "All Types": string;
+  Website: string;
+  "Website Root": string;
+  "Phone Number": string;
+  "International Phone Number": string;
+  Timezone: string;
+  "Full Address": string;
+  Borough: string;
+  "Street 1": string;
+  "Street 2": string;
+  City: string;
+  "Postal code": string;
+  State: string;
+  "Level 1 division": string;
+  "Level 2 division": string;
+  Country: string;
+  "Country code": string;
+  Longitude: string;
+  Latitude: string;
+  "Location Link on Google Maps": string;
+  "Owner name": string;
+  "Owner Id": string;
+  "Place Id": string;
+  Email: string;
+  Facebook: string;
+  Youtube: string;
+  Twitter: string;
+  Instagram: string;
+  Linkedin: string;
+  "First seen on": string;
+  "First seen on (timestamp)": string;
+  "Price Range": string;
+  "Reviews ID": string;
+  "Reviews count": string;
+  "Reviews Rating": string;
+  "Reviews per Score": string;
+  "Photos Count": string;
+  "Photo 1": string;
+  "Photo 2": string;
+  Occupancy: string;
+  "Is Claimed": string;
+  "Working Hours": string;
+  Characteristics: string;
+  "Website Title": string;
+  "Website Meta Keywords": string;
+  "Website Meta Description": string;
+  "Website Meta Image": string;
+  "Website Meta Generator": string;
+  "Website Language": string;
+  "Email 2": string;
+  "Email 3": string;
+  "Email 4": string;
+  "Email 5": string;
+  "All Emails": string;
+  "Contact Page 1": string;
+  "Contact Page 2": string;
+  "Contact Page 3": string;
+  "Contact Page 4": string;
+  "Contact Page 5": string;
+  "All Contact Pages": string;
+  "All Facebook Links": string;
+  "All Youtube Links": string;
+  "All Twitter Links": string;
+  "All Instagram Links": string;
+  "All Linkedin Links": string;
+  "Website Technologies": string;
+  "Website Ad Pixels": string;
 }

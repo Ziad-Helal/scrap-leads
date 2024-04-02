@@ -1,4 +1,3 @@
-import { scrap_io } from "@/apis/scrap-io";
 import { AppDispatch } from "@/types/store";
 import { loaded, loading, setGeoLocations } from "@/store/general-slice";
 import {
@@ -9,15 +8,17 @@ import {
 } from "@/store/leads-slice";
 import { SearchPlaces_Params } from "@/types/store/leads";
 import { toast } from "sonner";
+import axios from "axios";
 
-const api = new scrap_io();
+const baseUrl = "http://localhost:3500/api/leads-scraper/";
 
 export function getSubscriptionInfo() {
   return async (dispatch: AppDispatch) => {
     dispatch(loading("subscriptionInfo"));
 
-    const respons = await api.subscriptionInfo
-      .get()
+    const endPoint = "subscriptionInfo";
+    const respons = await axios
+      .get(baseUrl + endPoint)
       .then(({ data }) => data)
       .catch((error) => alert(error));
 
@@ -26,32 +27,37 @@ export function getSubscriptionInfo() {
   };
 }
 
-export function getGeoLocations(
-  country_code: string,
-  type: "admin1" | "admin2" | "city",
-  admin1_code?: string,
-  admin2_code?: string,
-  search_term?: string
-) {
+export function getGeoLocations(params: {
+  country_code: string;
+  type: "admin1" | "admin2" | "city";
+  admin1_code?: string;
+  admin2_code?: string;
+  search_term?: string;
+}) {
   return async (dispatch: AppDispatch) => {
-    dispatch(loading(type));
+    dispatch(loading(params.type));
 
-    const response = await api.geoLocations
-      .get({ country_code, type, admin1_code, admin2_code, search_term })
+    const endPoint = "geoLocations";
+    const response = await axios
+      .get(baseUrl + endPoint, { params })
       .then(({ data }) => data)
       .catch((error) => alert(error));
 
-    dispatch(setGeoLocations({ type, locations: response }));
-    dispatch(loaded(type));
+    dispatch(setGeoLocations({ type: params.type, locations: response }));
+    dispatch(loaded(params.type));
   };
 }
 
-export function getPlaceTypes() {
+export function getPlaceTypes(params?: {
+  search_term?: string;
+  locale?: "en" | "fr";
+}) {
   return async (dispatch: AppDispatch) => {
     dispatch(loading("placeTypes"));
 
-    const response = await api.places
-      .getType()
+    const endPoint = "placeTypes";
+    const response = await axios
+      .get(baseUrl + endPoint, { params })
       .then(({ data }) => data)
       .catch((error) => alert(error));
 
@@ -60,41 +66,28 @@ export function getPlaceTypes() {
   };
 }
 
-export function getOnePlace(place_id: string, skip_data?: 0 | 1) {
+export function getOnePlace(params: { place_id: string; skip_data?: 0 | 1 }) {
   return async (dispatch: AppDispatch) => {
     dispatch(loading("onePlace"));
 
-    const response = await api.places
-      .getOne({ place_id, skip_data })
+    const endPoint = "onePlace";
+    const response = await axios
+      .get(baseUrl + endPoint, { params })
       .then(({ data }) => data)
       .catch((error) => alert(error));
 
-    switch (response.meta.status) {
-      case "completed":
-        dispatch(setOnePlace(response.data));
-        dispatch(loaded("onePlace"));
-        break;
-      case "updating":
-        setTimeout(() => {
-          dispatch(getOnePlace(place_id, skip_data));
-        }, 5000);
-        break;
-      case "incomplete":
-        dispatch(setOnePlace(response.data));
-        dispatch(loaded("onePlace"));
-        toast("The result is incomplete", {
-          description:
-            "The maximum unmber of exports for this month has been reached.",
-          classNames: {
-            title: "text-red-500",
-            toast: "group-[.toaster]:pointer-events-auto",
-          },
-        });
-        break;
-      default:
-        dispatch(loaded("onePlace"));
-        break;
-    }
+    if (response.meta.status == "incomplete")
+      toast("The result is incomplete", {
+        description:
+          "The maximum unmber of exports for this month has been reached.",
+        classNames: {
+          title: "text-red-500",
+          toast: "group-[.toaster]:pointer-events-auto",
+        },
+      });
+
+    dispatch(setOnePlace(response.data));
+    dispatch(loaded("onePlace"));
   };
 }
 
@@ -102,36 +95,43 @@ export function getAllPlaces(params: SearchPlaces_Params) {
   return async (dispatch: AppDispatch) => {
     dispatch(loading("allPlaces"));
 
-    const response = await api.places
-      .getAll({ ...params })
+    const endPoint = "allPlaces";
+    const response = await axios
+      .get(baseUrl + endPoint, { params })
       .then(({ data }) => data)
-      .catch((error) => error);
+      .catch((error) => alert(error));
 
-    switch (response.meta.status) {
-      case "completed":
-        dispatch(setAllPlaces(response.data));
-        dispatch(loaded("allPlaces"));
-        break;
-      case "updating":
-        setTimeout(() => {
-          dispatch(getAllPlaces(params));
-        }, 5000);
-        break;
-      case "incomplete":
-        dispatch(setAllPlaces(response.data));
-        dispatch(loaded("allPlaces"));
+    console.log(response);
+
+    if (response) {
+      if (response.meta.status == "incomplete")
         toast("The result is incomplete", {
           description:
-            "The maximum unmber of exports for this month has been reached.",
+            "The maximum number of exports for this month has been reached.",
           classNames: {
             title: "text-red-500",
             toast: "group-[.toaster]:pointer-events-auto",
           },
         });
-        break;
-      default:
-        dispatch(loaded("allPlaces"));
-        break;
+      else if (response.meta.status == "completed")
+        toast("Successfull Request", {
+          description: `${response.meta.count} Results Found`,
+          classNames: {
+            title: "text-green-500",
+            toast: "group-[.toaster]:pointer-events-auto",
+          },
+        });
+
+      if (!params.skip_data) dispatch(setAllPlaces(response.data));
+    } else {
+      toast("Faild Request", {
+        classNames: {
+          title: "text-red-500",
+          toast: "group-[.toaster]:pointer-events-auto",
+        },
+      });
     }
+
+    dispatch(loaded("allPlaces"));
   };
 }

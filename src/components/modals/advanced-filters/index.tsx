@@ -13,7 +13,12 @@ export function AdvancedFilters_Modal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-full p-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full p-2"
+          title="Search Filters"
+        >
           <SlidersHorizontal />
         </Button>
       </DialogTrigger>

@@ -10,3 +10,4 @@ export * from "./skeleton";
 export * from "./radio-group";
 export * from "./input";
 export * from "./sonner";
+export * from "./badge";

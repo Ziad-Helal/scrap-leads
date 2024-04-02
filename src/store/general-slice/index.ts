@@ -38,9 +38,9 @@ const initialState: GeneralState = {
     allPlaces: false,
     subscriptionInfo: false,
   },
-  countries: Object.keys(countries).map((countryIso) => ({
-    iso2: countryIso,
-    text: countries[countryIso],
+  countries: countries.map(({ alpha2, name }) => ({
+    iso2: alpha2,
+    text: name,
   })),
 };
 

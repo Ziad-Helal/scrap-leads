@@ -80,6 +80,13 @@ const FormSchema = z.object({
 export function AdvancedFilters_Form() {
   const dispatch = useAppDispatch();
   const searchFilters = useAppSelector((state) => state.leads.searchFilters);
+  const ESSENTIAL_SEARCH_FILTERS = useAppSelector(
+    (state) => state.leads.subscriptionInfo?.features.ESSENTIAL_SEARCH_FILTERS
+  );
+  const ADVANCED_SEARCH_FILTERS = useAppSelector(
+    (state) => state.leads.subscriptionInfo?.features.ADVANCED_SEARCH_FILTERS
+  );
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: searchFilters,
@@ -101,7 +108,14 @@ export function AdvancedFilters_Form() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 max-h-[calc(100svh-200px)] overflow-auto"
       >
-        <fieldset>
+        <fieldset
+          className={`${
+            ESSENTIAL_SEARCH_FILTERS?.value
+              ? "text-foreground"
+              : "text-muted-foreground"
+          }`}
+          disabled={!ESSENTIAL_SEARCH_FILTERS?.value}
+        >
           <legend className="text-3xl font-light tracking-wider mb-2">
             Essential Filters
           </legend>
@@ -478,7 +492,14 @@ export function AdvancedFilters_Form() {
             />
           </div>
         </fieldset>
-        <fieldset>
+        <fieldset
+          className={`${
+            ADVANCED_SEARCH_FILTERS?.value
+              ? "text-foreground"
+              : "text-muted-foreground"
+          }`}
+          disabled={!ADVANCED_SEARCH_FILTERS?.value}
+        >
           <legend className="text-3xl font-light tracking-wider mb-2">
             Advanced filters
           </legend>
