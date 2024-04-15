@@ -108,13 +108,12 @@ export function convertToXLSX(data: OnePlace[]) {
         Instagram: instagram && instagram[0],
         Linkedin: linkedin && linkedin[0],
         "First seen on": first_seen_at,
-        "First seen on (timestamp)": new Date(first_seen_at)
-          .getTime()
-          .toString(),
+        "First seen on (timestamp)":
+          first_seen_at && new Date(first_seen_at).getTime().toString(),
         "Price Range": price_range,
         "Reviews ID": reviews_id,
-        "Reviews count": reviews_count.toString(),
-        "Reviews Rating": reviews_rating.toString(),
+        "Reviews count": reviews_count ? reviews_count.toString() : "0",
+        "Reviews Rating": reviews_rating ? reviews_rating.toString() : "0",
         "Reviews per Score": JSON.stringify(reviews_per_score),
         "Photos Count": photos_count,
         "Photo 1": photos && photos[0],

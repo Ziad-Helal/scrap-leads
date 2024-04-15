@@ -76,6 +76,7 @@ export function Main_Form() {
         admin2_code: data.admin2,
         city: data.city,
         ...searchFilters,
+        per_page: 50,
       })
     );
   }
