@@ -1,5 +1,9 @@
 import { countries } from "@/assets/countries";
-import { OnePlace, ReadyToConvertFields } from "@/types/store/leads";
+import {
+  GType_OR_GLocation,
+  OnePlace,
+  ReadyToConvertFields,
+} from "@/types/store/leads";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import * as XLSX from "xlsx";
@@ -8,7 +12,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function convertToXLSX(data: OnePlace[]) {
+export function convertToXLSX(
+  data: OnePlace[],
+  lev1dev: GType_OR_GLocation[],
+  lev2dev: GType_OR_GLocation[]
+) {
   const readyData: ReadyToConvertFields[] = [];
   data.forEach(
     ({
@@ -75,7 +83,7 @@ export function convertToXLSX(data: OnePlace[]) {
         "Description 2": descriptions && descriptions[1],
         "Description 3": descriptions && descriptions[2],
         "Place is Closed": is_closed ? "Yes" : "No",
-        "Main Type": types.find(({ is_main }) => is_main)!.type,
+        "Main Type": types.find(({ is_main }) => is_main)?.type || "",
         "All Types": JSON.stringify(types.filter(({ is_main }) => !is_main)),
         Website: website,
         "Website Root": domain,
@@ -89,8 +97,12 @@ export function convertToXLSX(data: OnePlace[]) {
         City: location_city,
         "Postal code": location_postal_code,
         State: location_state,
-        "Level 1 division": location_admin1_code,
-        "Level 2 division": location_admin2_code,
+        "Level 1 division":
+          lev1dev.find(({ id }) => id == location_admin1_code)?.text ||
+          location_admin1_code,
+        "Level 2 division":
+          lev2dev.find(({ id }) => id == location_admin2_code)?.text ||
+          location_admin2_code,
         Country: countries.find(
           ({ alpha2 }) => alpha2 == location_country_code.toLowerCase()
         )!.name,
@@ -128,10 +140,10 @@ export function convertToXLSX(data: OnePlace[]) {
         "Website Meta Image": meta_og_image && meta_og_image,
         "Website Meta Generator": meta_generator && meta_generator,
         "Website Language": lang && lang,
-        "Email 2": emails && emails[1].email,
-        "Email 3": emails && emails[2].email,
-        "Email 4": emails && emails[3].email,
-        "Email 5": emails && emails[4].email,
+        "Email 2": emails && emails[1] && emails[1].email,
+        "Email 3": emails && emails[2] && emails[2].email,
+        "Email 4": emails && emails[3] && emails[3].email,
+        "Email 5": emails && emails[4] && emails[4].email,
         "All Emails": JSON.stringify(emails),
         "Contact Page 1": contact_pages && contact_pages[0],
         "Contact Page 2": contact_pages && contact_pages[1],
@@ -149,6 +161,7 @@ export function convertToXLSX(data: OnePlace[]) {
       });
     }
   );
+
   const workSheet = XLSX.utils.json_to_sheet(readyData);
   const workBook = {
     Sheets: { leads: workSheet },

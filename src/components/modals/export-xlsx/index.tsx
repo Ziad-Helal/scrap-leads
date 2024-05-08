@@ -25,9 +25,10 @@ export const ExportAsXLSX_Modal = () => {
       state.leads.subscriptionInfo?.features.WEB_EXPORT_ADDITIONAL_FIELDS
   );
   const dataToConvert = useAppSelector((state) => state.leads.allPlaces);
+  const { admin1, admin2 } = useAppSelector((state) => state.general);
 
   useEffect(() => {
-    if (dataToConvert) setData(convertToXLSX(dataToConvert));
+    if (dataToConvert) setData(convertToXLSX(dataToConvert, admin1!, admin2!));
   }, [dataToConvert]);
 
   return (

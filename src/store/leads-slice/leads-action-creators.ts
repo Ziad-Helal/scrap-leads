@@ -101,7 +101,8 @@ export function getAllPlaces(params: SearchPlaces_Params) {
       .then(({ data }) => data)
       .catch((error) => alert(error));
 
-    console.log(response);
+    console.log(response.meta.status, response.meta.count);
+    response.data.length && console.log(response.data);
 
     if (response) {
       if (response.meta.status == "incomplete")
