@@ -43,6 +43,8 @@ export function getGeoLocations(params: {
       .then(({ data }) => data)
       .catch((error) => alert(error));
 
+    console.log(params.type, response);
+
     dispatch(setGeoLocations({ type: params.type, locations: response }));
     dispatch(loaded(params.type));
   };

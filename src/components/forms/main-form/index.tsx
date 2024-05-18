@@ -90,6 +90,7 @@ export function Main_Form() {
         admin2_code: form.getValues("admin2"),
         city: form.getValues("city"),
         ...searchFilters,
+        per_page: 50,
         skip_data: 1,
       })
     );
