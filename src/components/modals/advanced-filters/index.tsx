@@ -18,6 +18,7 @@ export function AdvancedFilters_Modal() {
           size="icon"
           className="rounded-full p-2"
           title="Search Filters"
+          disabled
         >
           <SlidersHorizontal />
         </Button>
