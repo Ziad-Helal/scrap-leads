@@ -101,7 +101,7 @@ export function getAllPlaces(params: SearchPlaces_Params) {
     const response = await axios
       .get(baseUrl + endPoint, { params })
       .then(({ data }) => data)
-      .catch((error) => alert(error));
+      .catch((error) => console.log(error));
 
     console.log(response.meta.status, response.meta.count);
     response.data.length && console.log(response.data);
